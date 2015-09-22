@@ -1,0 +1,1285 @@
+<?xml version="1.0" ?>
+<robot
+  name="ragnar_support">
+  <link
+    name="base_link">
+    <inertial>
+      <origin
+        xyz="-4.80572213006859E-06 9.64495107789746E-06 -0.0184680705713898"
+        rpy="0 0 0" />
+      <mass
+        value="26.5217124601092" />
+      <inertia
+        ixx="0.936457909215975"
+        ixy="-0.00108838510526368"
+        ixz="1.58187182756307E-06"
+        iyy="1.50216890338436"
+        iyz="1.0107984651762E-05"
+        izz="2.28323593907717" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://ragnar_support/meshes/base_link.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.752941176470588 0.752941176470588 0.752941176470588 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://ragnar_support/meshes/base_link.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <link
+    name="upper_arm_1">
+    <inertial>
+      <origin
+        xyz="-0.210332479810488 0.0724062934273924 0.00909438990065303"
+        rpy="0 0 0" />
+      <mass
+        value="0.220403356973371" />
+      <inertia
+        ixx="0.0026219178052145"
+        ixy="-0.000147380937793557"
+        ixz="-1.99584635831913E-05"
+        iyy="0.000216359248260153"
+        iyz="0.000315156110780191"
+        izz="0.00261966224861175" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://ragnar_support/meshes/upper_arm_1.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://ragnar_support/meshes/upper_arm_1.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="a1_j1"
+    type="continuous">
+    <origin
+      xyz="0.160010949865497 0.108274856777768 0.0575889311699957"
+      rpy="-0.577440063598924 -0.782918202723078 -1.31128623800239" />
+    <parent
+      link="base_link" />
+    <child
+      link="upper_arm_1" />
+    <axis
+      xyz="-0.999995614993734 0 -0.00296141744832884" />
+<limit effort="0" lower="-3.1416" upper="3.1416" velocity="2.618"/>
+  </joint>
+  <link
+    name="lower_arm_1p">
+    <inertial>
+      <origin
+        xyz="-7.08349093250793E-05 0.00409387140317863 0.00176568683072717"
+        rpy="0 0 0" />
+      <mass
+        value="0.00145416620270911" />
+      <inertia
+        ixx="5.12231336176605E-08"
+        ixy="4.53597246266854E-10"
+        ixz="1.85719233136336E-10"
+        iyy="7.70684657950722E-08"
+        iyz="-1.11336771401356E-08"
+        izz="5.60348563276591E-08" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://ragnar_support/meshes/lower_arm_1p.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="1 1 1 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://ragnar_support/meshes/lower_arm_1p.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="a1_j2_pitch"
+    type="revolute">
+    <origin
+      xyz="-0.248746661692048 0.300405276480653 0.0180161396934709"
+      rpy="-3.14989581429232E-05 -0.14520998368272 1.57122940430968" />
+    <parent
+      link="upper_arm_1" />
+    <child
+      link="lower_arm_1p" />
+    <axis
+      xyz="0 -1 0" />
+<limit effort="0" lower="-3.1416" upper="3.1416" velocity="2.618"/>
+  </joint>
+  <link
+    name="lower_arm_1y">
+    <inertial>
+      <origin
+        xyz="-0.0857350029007954 0.103068100037946 -0.240772387717076"
+        rpy="0 0 0" />
+      <mass
+        value="0.0428629261309953" />
+      <inertia
+        ixx="0.00152982554666126"
+        ixy="-0.000195415669175446"
+        ixz="0.00046043943199075"
+        iyy="0.00146022386921637"
+        iyz="-0.000549581102076443"
+        izz="0.000398536310970669" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://ragnar_support/meshes/lower_arm_1y.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.752941176470588 0.752941176470588 0.752941176470588 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://ragnar_support/meshes/lower_arm_1y.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="a1_j2_yaw"
+    type="revolute">
+    <origin
+      xyz="0 0 0"
+      rpy="5.55111512312578E-17 4.16333634234434E-17 -2.77555756156289E-17" />
+    <parent
+      link="lower_arm_1p" />
+    <child
+      link="lower_arm_1y" />
+    <axis
+      xyz="-1 0 0" />
+<limit effort="0" lower="-3.1416" upper="3.1416" velocity="2.618"/>
+  </joint>
+
+<link
+    name="ee_link_r">
+    <inertial>
+      <origin
+        xyz="-0.00409006086653613 -0.00179638885924011 0.000754174590804985"
+        rpy="0 0 0" />
+      <mass
+        value="0.00145423946008903" />
+      <inertia
+        ixx="7.7016148378909E-08"
+        ixy="-1.03410562127002E-08"
+        ixz="4.286676094022E-09"
+        iyy="5.53754672745314E-08"
+        iyz="1.73268650864434E-09"
+        izz="5.19400640910402E-08" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      
+      <material
+        name="">
+        <color
+          rgba="1 1 1 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      
+    </collision>
+  </link>
+  <joint
+    name="ee_joint_roll"
+    type="revolute">
+    <origin
+      xyz="-0.171084847209756 0.204219593400815 -0.481343674169302"
+      rpy="-1.13692211410268 -0.00297414918994651 -1.57076885440587" />
+    <parent
+      link="lower_arm_1y" />
+    <child
+      link="ee_link_r" />
+    <axis
+      xyz="0 0 1" />
+<limit effort="0" lower="-3.1416" upper="3.1416" velocity="2.618"/>
+  </joint>
+
+
+
+
+  <link
+    name="ee_link_p">
+    <inertial>
+      <origin
+        xyz="-0.00409006086653613 -0.00179638885924011 0.000754174590804985"
+        rpy="0 0 0" />
+      <mass
+        value="0.00145423946008903" />
+      <inertia
+        ixx="7.7016148378909E-08"
+        ixy="-1.03410562127002E-08"
+        ixz="4.286676094022E-09"
+        iyy="5.53754672745314E-08"
+        iyz="1.73268650864434E-09"
+        izz="5.19400640910402E-08" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://ragnar_support/meshes/ee_link_p.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="1 1 1 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://ragnar_support/meshes/ee_link_p.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="ee_joint_pitch"
+    type="revolute">
+    <origin
+      xyz="0 0 0"
+      rpy="0 0 0" />
+    <parent
+      link="ee_link_r" />
+    <child
+      link="ee_link_p" />
+    <axis
+      xyz="1 0 0" />
+<limit effort="0" lower="-3.1416" upper="3.1416" velocity="2.618"/>
+  </joint>
+  <link
+    name="ee_link_y">
+    <inertial>
+      <origin
+        xyz="0.0452782579203541 0.0299974425520077 -0.0986829932824179"
+        rpy="0 0 0" />
+      <mass
+        value="0.186074387301356" />
+      <inertia
+        ixx="0.000658891199332475"
+        ixy="0.000210038051496725"
+        ixz="1.60700356881814E-06"
+        iyy="0.000664294616045467"
+        iyz="2.93628997789316E-06"
+        izz="0.00043513553229359" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://ragnar_support/meshes/ee_link_y.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="1 0 0 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://ragnar_support/meshes/ee_link_y.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="ee_joint_yaw"
+    type="revolute">
+    <origin
+      xyz="0 0 0"
+      rpy="5.55111512312578E-17 -2.77555756156289E-17 0" />
+    <parent
+      link="ee_link_p" />
+    <child
+      link="ee_link_y" />
+    <axis
+      xyz="0 -1 0" />
+<limit effort="0" lower="-3.1416" upper="3.1416" velocity="2.618"/>
+  </joint>
+  <link
+    name="lower_arm_1mimic_p">
+    <inertial>
+      <origin
+        xyz="7.23852119434709E-05 -0.00409560069078574 -0.001761293311284"
+        rpy="0 0 0" />
+      <mass
+        value="0.00145424088627024" />
+      <inertia
+        ixx="5.12246870171609E-08"
+        ixy="4.57947179070292E-10"
+        ixz="1.89770593771504E-10"
+        iyy="7.7082829467565E-08"
+        iyz="-1.11221045104934E-08"
+        izz="5.60242674548806E-08" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://ragnar_support/meshes/lower_arm_1mimic_p.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="1 1 1 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://ragnar_support/meshes/lower_arm_1mimic_p.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="a1_j2_mimic_pitch"
+    type="revolute">
+    <origin
+      xyz="-0.190426667074997 0.300430267743474 0.0180179573790795"
+      rpy="-3.14989581429232E-05 -0.14520998368272 1.57122940430968" />
+    <parent
+      link="upper_arm_1" />
+    <child
+      link="lower_arm_1mimic_p" />
+    <axis
+      xyz="0 -1 0" />
+<limit effort="0" lower="-3.1416" upper="3.1416" velocity="2.618"/>
+  </joint>
+  <link
+    name="lower_arm_1mimic_y">
+    <inertial>
+      <origin
+        xyz="-0.0857093763139064 0.101582797549759 -0.241413397998298"
+        rpy="0 0 0" />
+      <mass
+        value="0.0428629228518739" />
+      <inertia
+        ixx="0.00152982508351827"
+        ixy="-0.000195427127640526"
+        ixz="0.000460434384058724"
+        iyy="0.00146019589890375"
+        iyz="-0.000549607512928558"
+        izz="0.000398563695291804" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://ragnar_support/meshes/lower_arm_1mimic_y.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.752941176470588 0.752941176470588 0.752941176470588 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://ragnar_support/meshes/lower_arm_1mimic_y.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="a1_j2_mimic_yaw"
+    type="revolute">
+    <origin
+      xyz="0 0 0"
+      rpy="5.55111512312578E-17 4.16333634234434E-17 -2.77555756156289E-17" />
+    <parent
+      link="lower_arm_1mimic_p" />
+    <child
+      link="lower_arm_1mimic_y" />
+    <axis
+      xyz="-1 0 0" />
+<limit effort="0" lower="-3.1416" upper="3.1416" velocity="2.618"/>
+  </joint>
+  <link
+    name="upper_arm_2">
+    <inertial>
+      <origin
+        xyz="-0.119524856637198 0.0730478431711376 -0.0013685727575799"
+        rpy="0 0 0" />
+      <mass
+        value="0.22040333047608" />
+      <inertia
+        ixx="0.00262206454372628"
+        ixy="-0.000147486924774827"
+        ixz="1.87297935956283E-06"
+        iyy="0.000175732831798749"
+        iyz="-2.01240188664239E-05"
+        izz="0.00266013755986573" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://ragnar_support/meshes/upper_arm_2.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://ragnar_support/meshes/upper_arm_2.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="a2_j1"
+    type="revolute">
+    <origin
+      xyz="-0.142844129415703 0.17234309891631 -0.00873933863314556"
+      rpy="-2.69762833232882 -0.788073303524792 -1.83439148402335" />
+    <parent
+      link="base_link" />
+    <child
+      link="upper_arm_2" />
+    <axis
+      xyz="-0.999995614993734 0 -0.00296141744832867" />
+<limit effort="0" lower="-3.1416" upper="3.1416" velocity="2.618"/>
+  </joint>
+  <link
+    name="lower_arm_2p">
+    <inertial>
+      <origin
+        xyz="0.000193960570401608 -0.00412734760723876 0.0016762694871805"
+        rpy="0 0 0" />
+      <mass
+        value="0.00145416612478692" />
+      <inertia
+        ixx="5.12721905699785E-08"
+        ixy="1.22944921849684E-09"
+        ixz="-5.07442602823755E-10"
+        iyy="7.74930326291365E-08"
+        iyz="1.06551321935051E-08"
+        izz="5.55610866534726E-08" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://ragnar_support/meshes/lower_arm_2p.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="1 1 1 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://ragnar_support/meshes/lower_arm_2p.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="a2_j2_pitch"
+    type="revolute">
+    <origin
+      xyz="-0.157824184998755 0.300491184563458 0.0171018512178868"
+      rpy="3.14159172517715 0.0250367542098497 1.57072216669281" />
+    <parent
+      link="upper_arm_2" />
+    <child
+      link="lower_arm_2p" />
+    <axis
+      xyz="0 -1 0" />
+<limit effort="0" lower="-3.1416" upper="3.1416" velocity="2.618"/>
+  </joint>
+  <link
+    name="lower_arm_2y">
+    <inertial>
+      <origin
+        xyz="-0.0868888606537788 -0.102500988590004 -0.240600919616537"
+        rpy="0 0 0" />
+      <mass
+        value="0.0428629280041853" />
+      <inertia
+        ixx="0.00152520187549002"
+        ixy="0.000197042016106519"
+        ixz="0.000466533453165836"
+        iyy="0.00146282896883989"
+        iyz="0.000546077220630335"
+        izz="0.00040055443415453" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://ragnar_support/meshes/lower_arm_2y.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.752941176470588 0.752941176470588 0.752941176470588 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://ragnar_support/meshes/lower_arm_2y.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="a2_j2_yaw"
+    type="revolute">
+    <origin
+      xyz="0 0 0"
+      rpy="-5.55111512312578E-17 2.08166817117217E-17 -1.04083408558608E-17" />
+    <parent
+      link="lower_arm_2p" />
+    <child
+      link="lower_arm_2y" />
+    <axis
+      xyz="-1 0 0" />
+<limit effort="0" lower="-3.1416" upper="3.1416" velocity="2.618"/>
+  </joint>
+  <link
+    name="lower_arm_2mimic_p">
+    <inertial>
+      <origin
+        xyz="-0.000192383767370741 0.00412907580736449 -0.00167187358575915"
+        rpy="0 0 0" />
+      <mass
+        value="0.00145423674393381" />
+      <inertia
+        ixx="5.12745712535365E-08"
+        ixy="1.22444985952249E-09"
+        ixz="-5.04599575788275E-10"
+        iyy="7.75071638495174E-08"
+        iyz="1.06437653889489E-08"
+        izz="5.55496135178517E-08" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://ragnar_support/meshes/lower_arm_2mimic_p.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="1 1 1 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://ragnar_support/meshes/lower_arm_2mimic_p.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="a2_j2_mimic_pitch"
+    type="revolute">
+    <origin
+      xyz="-0.0995041851590518 0.300486860901783 0.0171019053459426"
+      rpy="3.14159172517715 0.0250367542098497 1.57072216669281" />
+    <parent
+      link="upper_arm_2" />
+    <child
+      link="lower_arm_2mimic_p" />
+    <axis
+      xyz="0 -1 0" />
+<limit effort="0" lower="-3.1416" upper="3.1416" velocity="2.618"/>
+  </joint>
+  <link
+    name="lower_arm_2mimic_y">
+    <inertial>
+      <origin
+        xyz="-0.0869593410840664 -0.101003472108792 -0.241209317092941"
+        rpy="0 0 0" />
+      <mass
+        value="0.042862931736881" />
+      <inertia
+        ixx="0.00152520299683367"
+        ixy="0.000197053408788448"
+        ixz="0.000466527794651676"
+        iyy="0.00146280189684198"
+        iyz="0.000546104252323178"
+        izz="0.000400581341978947" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://ragnar_support/meshes/lower_arm_2mimic_y.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.752941176470588 0.752941176470588 0.752941176470588 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://ragnar_support/meshes/lower_arm_2mimic_y.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="a2_j2_mimic_yaw"
+    type="revolute">
+    <origin
+      xyz="0 0 0"
+      rpy="-5.55111512312578E-17 2.08166817117217E-17 -1.04083408558608E-17" />
+    <parent
+      link="lower_arm_2mimic_p" />
+    <child
+      link="lower_arm_2mimic_y" />
+    <axis
+      xyz="-1 0 0" />
+<limit effort="0" lower="-3.1416" upper="3.1416" velocity="2.618"/>
+  </joint>
+  <link
+    name="upper_arm_3">
+    <inertial>
+      <origin
+        xyz="-0.00484346750270384 0.0730019074715039 0.00278194645535904"
+        rpy="0 0 0" />
+      <mass
+        value="0.220403328218857" />
+      <inertia
+        ixx="0.00262200101041416"
+        ixy="-0.000147924103597801"
+        ixz="-5.84671130286481E-06"
+        iyy="0.000178360466364994"
+        iyz="8.22410475367427E-05"
+        izz="0.0026575777339262" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://ragnar_support/meshes/upper_arm_3.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://ragnar_support/meshes/upper_arm_3.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="a3_j1"
+    type="revolute">
+    <origin
+      xyz="-0.122407872824831 -0.2486131944473 -0.0876998860967733"
+      rpy="-0.45586339899943 -0.782740006622591 1.83074885812913" />
+    <parent
+      link="base_link" />
+    <child
+      link="upper_arm_3" />
+    <axis
+      xyz="-0.999995614993735 0 -0.0029614174481194" />
+<limit effort="0" lower="-3.1416" upper="3.1416" velocity="2.618"/>
+  </joint>
+  <link
+    name="lower_arm_3p">
+    <inertial>
+      <origin
+        xyz="-0.00100226673856241 0.00341852398637604 0.0026815729632414"
+        rpy="0 0 0" />
+      <mass
+        value="0.00145417812987813" />
+      <inertia
+        ixx="5.27685766598453E-08"
+        ixy="5.29360734212653E-09"
+        ixz="4.13695732958862E-09"
+        iyy="6.92491919449324E-08"
+        iyz="-1.41250268736226E-08"
+        izz="6.23111122255088E-08" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://ragnar_support/meshes/lower_arm_3p.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="1 1 1 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://ragnar_support/meshes/lower_arm_3p.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="a3_j2_pitch"
+    type="revolute">
+    <origin
+      xyz="-0.0431934006587499 0.300828347020123 -0.00999201606430919"
+      rpy="-3.71882227945036E-06 -0.0500887079396553 1.57094478519501" />
+    <parent
+      link="upper_arm_3" />
+    <child
+      link="lower_arm_3p" />
+    <axis
+      xyz="0 -1 0" />
+<limit effort="0" lower="-3.1416" upper="3.1416" velocity="2.618"/>
+  </joint>
+  <link
+    name="lower_arm_3y">
+    <inertial>
+      <origin
+        xyz="-0.108850658252164 0.13629633319031 -0.213353346793806"
+        rpy="0 0 0" />
+      <mass
+        value="0.0428629720186421" />
+      <inertia
+        ixx="0.00143044983777832"
+        ixy="-0.000328478976934701"
+        ixz="0.00051770461091551"
+        iyy="0.00128340477895969"
+        iyz="-0.000646341921694252"
+        izz="0.000674736987559352" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://ragnar_support/meshes/lower_arm_3y.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.752941176470588 0.752941176470588 0.752941176470588 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://ragnar_support/meshes/lower_arm_3y.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="a3_j2_yaw"
+    type="revolute">
+    <origin
+      xyz="0 0 0"
+      rpy="0 1.04083408558608E-17 2.77555756156289E-17" />
+    <parent
+      link="lower_arm_3p" />
+    <child
+      link="lower_arm_3y" />
+    <axis
+      xyz="-1 0 0" />
+<limit effort="0" lower="-3.1416" upper="3.1416" velocity="2.618"/>
+  </joint>
+  <link
+    name="lower_arm_3mimic_p">
+    <inertial>
+      <origin
+        xyz="0.00100417445358647 -0.00342086110245249 -0.0026777191003053"
+        rpy="0 0 0" />
+      <mass
+        value="0.00145424024842047" />
+      <inertia
+        ixx="5.27725393005272E-08"
+        ixy="5.29956777771075E-09"
+        ixz="4.13930587486123E-09"
+        iyy="6.92635887230863E-08"
+        iyz="-1.41202240693832E-08"
+        izz="6.22971227E-08" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://ragnar_support/meshes/lower_arm_3mimic_p.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="1 1 1 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://ragnar_support/meshes/lower_arm_3mimic_p.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="a3_j2_mimic_pitch"
+    type="revolute">
+    <origin
+      xyz="0.0151265986997755 0.300836994255203 -0.00999179945460196"
+      rpy="-3.71882227945036E-06 -0.0500887079396553 1.57094478519501" />
+    <parent
+      link="upper_arm_3" />
+    <child
+      link="lower_arm_3mimic_p" />
+    <axis
+      xyz="0 -1 0" />
+<limit effort="0" lower="-3.1416" upper="3.1416" velocity="2.618"/>
+  </joint>
+  <link
+    name="lower_arm_3mimic_y">
+    <inertial>
+      <origin
+        xyz="-0.108487208402364 0.135056253935027 -0.214326874718862"
+        rpy="0 0 0" />
+      <mass
+        value="0.0428629723787723" />
+      <inertia
+        ixx="0.00143044315890675"
+        ixy="-0.000328495424269735"
+        ixz="0.000517701677962203"
+        iyy="0.00128337408529779"
+        iyz="-0.000646354247115055"
+        izz="0.000674774334026611" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://ragnar_support/meshes/lower_arm_3mimic_y.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.752941176470588 0.752941176470588 0.752941176470588 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://ragnar_support/meshes/lower_arm_3mimic_y.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="a3_j2_mimic_yaw"
+    type="revolute">
+    <origin
+      xyz="0 0 0"
+      rpy="0 1.04083408558608E-17 2.77555756156289E-17" />
+    <parent
+      link="lower_arm_3mimic_p" />
+    <child
+      link="lower_arm_3mimic_y" />
+    <axis
+      xyz="-1 0 0" />
+<limit effort="0" lower="-3.1416" upper="3.1416" velocity="2.618"/>
+  </joint>
+  <link
+    name="upper_arm_4">
+    <inertial>
+      <origin
+        xyz="-0.0630349864280187 0.0718622788097864 -0.0133332044240239"
+        rpy="0 0 0" />
+      <mass
+        value="0.22040332930202" />
+      <inertia
+        ixx="0.00262220904041122"
+        ixy="-0.000143937255534239"
+        ixz="2.61586329865067E-05"
+        iyy="0.000250875791379021"
+        iyz="-0.000426371144275101"
+        izz="0.00258485009537866" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://ragnar_support/meshes/upper_arm_4.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.792156862745098 0.819607843137255 0.933333333333333 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://ragnar_support/meshes/upper_arm_4.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="a4_j1"
+    type="revolute">
+    <origin
+      xyz="0.132512415306385 -0.210902059977154 -0.0486584793369262"
+      rpy="-2.53059906119847 -0.787825245543956 1.30659742036931" />
+    <parent
+      link="base_link" />
+    <child
+      link="upper_arm_4" />
+    <axis
+      xyz="-0.999995614993734 0 -0.00296141744832823" />
+<limit effort="0" lower="-3.1416" upper="3.1416" velocity="2.618"/>
+  </joint>
+  <link
+    name="lower_arm_4p">
+    <inertial>
+      <origin
+        xyz="-0.216239839008508 -0.275308646624798 -0.424226517789036"
+        rpy="0 0 0" />
+      <mass
+        value="0.00145419949934001" />
+      <inertia
+        ixx="5.66828874210897E-08"
+        ixy="1.09592650336371E-08"
+        ixz="-4.19485557341024E-09"
+        iyy="7.32076691406489E-08"
+        iyz="8.38763936454966E-09"
+        izz="5.44362812756979E-08" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://ragnar_support/meshes/lower_arm_4p.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="1 1 1 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://ragnar_support/meshes/lower_arm_4p.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="a4_j2_pitch"
+    type="revolute">
+    <origin
+      xyz="-0.101221553770948 0.299229501991879 -0.0329393354550221"
+      rpy="3.14153716664843 0.192086368842642 1.57022037519689" />
+    <parent
+      link="upper_arm_4" />
+    <child
+      link="lower_arm_4p" />
+    <axis
+      xyz="0 -1 0" />
+<limit effort="0" lower="-3.1416" upper="3.1416" velocity="2.618"/>
+  </joint>
+  <link
+    name="lower_arm_4y">
+    <inertial>
+      <origin
+        xyz="-0.10894963965042 -0.136737530023858 -0.213021248646061"
+        rpy="0 0 0" />
+      <mass
+        value="0.042863022967467" />
+      <inertia
+        ixx="0.00142741142118146"
+        ixy="0.000331247225976149"
+        ixz="0.0005193397686382"
+        iyy="0.00128112156320091"
+        iyz="0.000646455946788979"
+        izz="0.000680063480170568" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://ragnar_support/meshes/lower_arm_4y.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.752941176470588 0.752941176470588 0.752941176470588 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://ragnar_support/meshes/lower_arm_4y.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="a4_j2_yaw"
+    type="revolute">
+    <origin
+      xyz="0 0 0"
+      rpy="5.55111512312578E-17 -2.08166817117217E-17 -2.08166817117217E-17" />
+    <parent
+      link="lower_arm_4p" />
+    <child
+      link="lower_arm_4y" />
+    <axis
+      xyz="-1 0 0" />
+<limit effort="0" lower="-3.1416" upper="3.1416" velocity="2.618"/>
+  </joint>
+  <link
+    name="lower_arm_4mimic_p">
+    <inertial>
+      <origin
+        xyz="-0.00188219535482986 0.00377657736311257 -0.00144132341503525"
+        rpy="0 0 0" />
+      <mass
+        value="0.00145419725598561" />
+      <inertia
+        ixx="5.66829033424919E-08"
+        ixy="1.09581817674112E-08"
+        ixz="-4.19536086277474E-09"
+        iyy="7.32081518393887E-08"
+        iyz="8.38817057671909E-09"
+        izz="5.44356193679025E-08" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://ragnar_support/meshes/lower_arm_4mimic_p.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="1 1 1 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://ragnar_support/meshes/lower_arm_4mimic_p.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="a4_j2_mimic_pitch"
+    type="revolute">
+    <origin
+      xyz="-0.0429015631778787 0.299196530272228 -0.0329361589728635"
+      rpy="3.14153716664843 0.192086368842642 1.57022037519689" />
+    <parent
+      link="upper_arm_4" />
+    <child
+      link="lower_arm_4mimic_p" />
+    <axis
+      xyz="0 -1 0" />
+<limit effort="0" lower="-3.1416" upper="3.1416" velocity="2.618"/>
+  </joint>
+  <link
+    name="lower_arm_4mimic_y">
+    <inertial>
+      <origin
+        xyz="-0.109633002166533 -0.135367731741026 -0.213544997059403"
+        rpy="0 0 0" />
+      <mass
+        value="0.0428629811410288" />
+      <inertia
+        ixx="0.0014274224906128"
+        ixy="0.000331252143611295"
+        ixz="0.000519320952469747"
+        iyy="0.00128108600476846"
+        iyz="0.000646474885472652"
+        izz="0.000680083133307756" />
+    </inertial>
+    <visual>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://ragnar_support/meshes/lower_arm_4mimic_y.STL" />
+      </geometry>
+      <material
+        name="">
+        <color
+          rgba="0.752941176470588 0.752941176470588 0.752941176470588 1" />
+      </material>
+    </visual>
+    <collision>
+      <origin
+        xyz="0 0 0"
+        rpy="0 0 0" />
+      <geometry>
+        <mesh
+          filename="package://ragnar_support/meshes/lower_arm_4mimic_y.STL" />
+      </geometry>
+    </collision>
+  </link>
+  <joint
+    name="a4_j2_mimic_yaw"
+    type="revolute">
+    <origin
+      xyz="0 0 0"
+      rpy="5.55111512312578E-17 -2.08166817117217E-17 -2.08166817117217E-17" />
+    <parent
+      link="lower_arm_4mimic_p" />
+    <child
+      link="lower_arm_4mimic_y" />
+    <axis
+      xyz="-1 0 0" />
+<limit effort="0" lower="-3.1416" upper="3.1416" velocity="2.618"/>
+  </joint>
+</robot>

@@ -1,0 +1,77 @@
+#!/usr/bin/env python
+
+import traceback
+
+import rospy
+from geometry_msgs.msg import TransformStamped
+from tf2_msgs.msg import TFMessage
+from copy import deepcopy
+
+
+def publish_tf():
+  pub = rospy.Publisher('/tf', TFMessage)
+  rospy.init_node('publish_tf', anonymous=True)
+  rate = rospy.Rate(30)
+
+  message = TFMessage()
+  message2  = TransformStamped()
+  errors = 0
+  while not rospy.is_shutdown():
+    try:
+      #bb_data = rospy.get_param('trigger')
+      #message.header.frame_id = bb_data['world_frame_name']
+      #message2.header.frame_id = bb_data['world_frame_name']
+      
+      link = TransformStamped()
+      link.header.frame_id = "base_link"
+      link.header.stamp = rospy.Time.now()
+      link.child_frame_id = "upper_arm_1"
+      link.transform.translation.x = 1.0
+      link.transform.translation.y = 1.0
+      link.transform.translation.z = 0.0
+      link.transform.rotation.x = 1.0
+      link.transform.rotation.y = 0.0
+      link.transform.rotation.z = 0.0
+      link.transform.rotation.w = 0.0
+
+      message.transforms.append(deepcopy(link))
+
+      link.child_frame_id = "upper_arm_2"
+      link.transform.translation.x = -1.0
+      link.transform.translation.y = 1.0
+      link.transform.translation.z = 0.0
+      message.transforms.append(deepcopy(link))
+
+      link.child_frame_id = "upper_arm_3"
+      link.transform.translation.x = -1.0
+      link.transform.translation.y = -1.0
+      link.transform.translation.z = 0.0
+      message.transforms.append(deepcopy(link))
+
+      link.child_frame_id = "upper_arm_4"
+      link.transform.translation.x = 1.0
+      link.transform.translation.y = -1.0
+      link.transform.translation.z = 0.0
+      message.transforms.append(deepcopy(link))
+
+
+      pub.publish(message)
+      
+      if errors:
+        rospy.loginfo('Recovered from error')
+      errors = 0
+    except Exception as err:
+      if not errors:
+        rospy.logwarn("Error getting information: %s" % err)
+      errors += 1
+      if errors >= 100:
+        rospy.logfatal('Too many errors while getting ')
+    rate.sleep()
+
+if '__main__' == __name__:
+  try:
+    publish_tf()
+  except Exception as err:
+    print 'Error: %s' % err
+    print 'Traceback:'
+    traceback.print_exc()
