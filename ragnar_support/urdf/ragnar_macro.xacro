@@ -1,6 +1,6 @@
 <?xml version="1.0" ?>
 <robot name="Ragnar" xmlns:xacro="http://ros.org/wiki/xacro">
-  <xacro:include filename="$(find ragnar_support)/urdf/ragnar_upper2_macro.xacro"/>
+  <xacro:include filename="$(find ragnar_support)/urdf/ragnar_upper3_macro.xacro"/>
 
   <xacro:macro name="ragnar" params="prefix">
 
@@ -63,7 +63,7 @@
     </link>
     <joint name="${prefix}ee_joint" type="floating">
       <origin xyz="0 0 0" rpy="0 0 0" />
-      <parent link="${prefix}lower_arm_1" />
+      <parent link="${prefix}base_link" />
       <child link="${prefix}ee_link" />
     </joint>
 
