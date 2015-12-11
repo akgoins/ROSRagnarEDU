@@ -148,7 +148,6 @@ void rsp::RagnarStatePublisher::updateJointPosition(const sensor_msgs::JointStat
 
   tf::Transform upper_link, lower_link, ee_link, base_link;
   // Joint 1
-  //calculateLinkTransforms(pts.A.col(0), pts.B.col(0), pts.C.col(0), zi_[0], upper_link, lower_link);
   calculateDirectedTransform(pts.A.col(0), pts.B.col(0),zi_[0],upper_link);
   tf_broadcaster_.sendTransform(tf::StampedTransform(upper_link,
                                                      joints->header.stamp,
@@ -166,7 +165,6 @@ void rsp::RagnarStatePublisher::updateJointPosition(const sensor_msgs::JointStat
                                                      prefix_ + "lower_arm_4b"));
   // Joint 2
   calculateDirectedTransform(pts.A.col(1), pts.B.col(1),zi_[1],upper_link);
-  //calculateLinkTransforms(pts.A.col(1), pts.B.col(1), pts.C.col(1), zi_[1], upper_link, lower_link);
   tf_broadcaster_.sendTransform(tf::StampedTransform(upper_link,
                                                      joints->header.stamp,
                                                      prefix_ + "base_link",
@@ -183,7 +181,6 @@ void rsp::RagnarStatePublisher::updateJointPosition(const sensor_msgs::JointStat
                                                      prefix_ + "lower_arm_3b"));
   // Joint 3
   calculateDirectedTransform(pts.A.col(2), pts.B.col(2),zi_[2],upper_link);
-  //calculateLinkTransforms(pts.A.col(2), pts.B.col(2), pts.C.col(2), zi_[2], upper_link, lower_link);
   tf_broadcaster_.sendTransform(tf::StampedTransform(upper_link,
                                                      joints->header.stamp,
                                                      prefix_ + "base_link",
@@ -200,7 +197,6 @@ void rsp::RagnarStatePublisher::updateJointPosition(const sensor_msgs::JointStat
                                                      prefix_ + "lower_arm_2b"));
   // Joint 4
   calculateDirectedTransform(pts.A.col(3), pts.B.col(3),zi_[3],upper_link);
-  //calculateLinkTransforms(pts.A.col(3), pts.B.col(3), pts.C.col(3), zi_[3], upper_link, lower_link);
   tf_broadcaster_.sendTransform(tf::StampedTransform(upper_link,
                                                      joints->header.stamp,
                                                      prefix_ + "base_link",
@@ -222,18 +218,4 @@ void rsp::RagnarStatePublisher::updateJointPosition(const sensor_msgs::JointStat
                                                      joints->header.stamp,
                                                      prefix_ + "base_link",
                                                      prefix_ + "ee_link"));
-
-  base_link.setIdentity();
-  base_link.setOrigin(tf::Vector3(0.0, 0.0, 0.05));
-  tf_broadcaster_.sendTransform(tf::StampedTransform(base_link,
-                                                     joints->header.stamp,
-                                                     prefix_ + "base_link",
-                                                     prefix_ + "base_link2"));
-
-  // world -> base_link
-  // tf::Transform world_tf = tf::Transform::getIdentity();
-  // tf_broadcaster_.sendTransform(tf::StampedTransform(world_tf,
-                                                     // joints->header.stamp,
-                                                     // prefix_ + "world",
-                                                     // prefix_ + "base_link"));
 }

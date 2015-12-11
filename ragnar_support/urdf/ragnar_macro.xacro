@@ -1,20 +1,14 @@
 <?xml version="1.0" ?>
 <robot name="Ragnar" xmlns:xacro="http://ros.org/wiki/xacro">
-  <xacro:include filename="$(find ragnar_support)/urdf/ragnar_upper3_macro.xacro"/>
+  <xacro:include filename="$(find ragnar_support)/urdf/ragnar_leg_macro.xacro"/>
 
   <xacro:macro name="ragnar" params="prefix">
 
     <!-- Base Link -->
-    <link name="${prefix}base_link"/>
-    <link name="${prefix}base_link2">
-      <inertial>
-        <origin xyz="-4.80572213006859E-06 9.64495107789746E-06 -0.0184680705713898" rpy="0 0 0" />
-        <mass value="26.5217124601092" />
-        <inertia ixx="0.936457909215975" ixy="-0.00108838510526368" ixz="1.58187182756307E-06"
-          iyy="1.50216890338436" iyz="1.0107984651762E-05" izz="2.28323593907717" />
-      </inertial>
+
+    <link name="${prefix}base_link">
       <visual>
-        <origin xyz="0 0 0" rpy="0 0 0" />
+        <origin xyz="0 0 0.045" rpy="0 0 0" />
         <geometry>
           <mesh filename="package://ragnar_support/meshes/base_link.STL" />
         </geometry>
@@ -30,18 +24,13 @@
       </collision>
     </link>
 
-    <joint name="${prefix}base_rotate" type="floating">
-      <origin xyz="0 0 0.05" rpy="0 0 1.5708" />
-      <parent link="${prefix}base_link" />
-      <child link="${prefix}base_link2" />
-      <axis xyz="0 0 0" />
-    </joint>
+   
 
     <!-- The four ragnar arms -->
-    <xacro:ragnar_upper2 prefix="${prefix}" num="1" x="0.122" y="0.249" z="-0.0877" r="-0.577" p="-0.783" w="-1.311" d1="0.300" d2="0.550"/>
-    <xacro:ragnar_upper2 prefix="${prefix}" num="2" x="-0.122" y="0.249" z="-0.0877" r="-2.698" p="-0.788" w="-1.834" d1="0.300" d2="0.550"/>
-    <xacro:ragnar_upper2 prefix="${prefix}" num="3" x="-0.122" y="-0.249" z="-0.0877" r="-0.456" p="-0.783" w="1.831" d1="0.300" d2="0.550"/>
-    <xacro:ragnar_upper2 prefix="${prefix}" num="4" x="0.122" y="-0.249" z="-0.0877" r="-2.531" p="-0.788" w="1.307" d1="0.300" d2="0.550"/>
+    <xacro:ragnar_leg prefix="${prefix}" num="1" x="0.122" y="0.249" z="-0.0877" r="-0.577" p="-0.783" w="-1.311" d1="0.300" d2="0.550"/>
+    <xacro:ragnar_leg prefix="${prefix}" num="2" x="-0.122" y="0.249" z="-0.0877" r="-2.698" p="-0.788" w="-1.834" d1="0.300" d2="0.550"/>
+    <xacro:ragnar_leg prefix="${prefix}" num="3" x="-0.122" y="-0.249" z="-0.0877" r="-0.456" p="-0.783" w="1.831" d1="0.300" d2="0.550"/>
+    <xacro:ragnar_leg prefix="${prefix}" num="4" x="0.122" y="-0.249" z="-0.0877" r="-2.531" p="-0.788" w="1.307" d1="0.300" d2="0.550"/>
 
     <!-- End Effector Link -->
     <link name="${prefix}ee_link">
