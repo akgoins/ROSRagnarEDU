@@ -46,7 +46,7 @@
     <!-- End Effector Link -->
     <link name="${prefix}ee_link">
       <visual>
-        <origin xyz="0 0 0" rpy="1.57 0 1.57" />
+        <origin xyz="0 0.019 0" rpy="1.57 0 1.57" />
         <geometry>
           <mesh filename="package://ragnar_support/meshes/ragnar_ee.STL" />
         </geometry>

@@ -55,7 +55,7 @@
 
   <link name="${prefix}lower_arm_${num}a">
     <visual>
-      <origin xyz="0 0 0" rpy="0 0 1.57" />
+      <origin xyz="0 0 0" rpy="-1.57 0 1.57" />
       <geometry>
         <mesh filename="package://ragnar_support/meshes/ragnar_single_arm2.stl" />
       </geometry>
@@ -83,21 +83,12 @@
 
   <link name="${prefix}lower_arm_${num}b">
     <visual>
-      <origin xyz="0 0 0" rpy="0 1.57 0" />
+      <origin xyz="0 0 0" rpy="1.57 0 1.57" />
       <geometry>
-        <cylinder length="0.1" radius="0.04"/>
+        <mesh filename="package://ragnar_support/meshes/ragnar_single_arm2.stl" />
       </geometry>
       <material name="">
-        <color rgba="0.5 0.5 0.5 1" />
-      </material>
-    </visual>
-    <visual>
-      <origin xyz="0 ${d1/2} 0" rpy="1.57 0 0" />
-      <geometry>
-        <cylinder length="${d1}" radius="0.02"/>
-      </geometry>
-      <material name="">
-        <color rgba="0.5 0.5 0.5 1" />
+        <color rgba="0.75 0.75 0.75 1" />
       </material>
     </visual>
 
