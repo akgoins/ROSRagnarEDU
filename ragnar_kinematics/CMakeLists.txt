@@ -8,6 +8,8 @@ find_package(catkin REQUIRED COMPONENTS
   roscpp
 )
 
+find_package(OpenCV)
+
 catkin_package(
   INCLUDE_DIRS include
   LIBRARIES ragnar_kinematics
@@ -18,6 +20,7 @@ include_directories(include)
 include_directories(
   ${catkin_INCLUDE_DIRS}
 )
+include_directories(${OpenCV_INCLUDE_DIRS})
 
 add_library(ragnar_kinematics
  src/ragnar_kinematic_defs.cpp
@@ -28,20 +31,31 @@ target_link_libraries(ragnar_kinematics
   ${catkin_LIBRARIES}
 )
 
+add_library(spline_creator
+  src/spline_creator.cpp)
 
 add_executable(ragnar_kinematics_node src/ragnar_test_demo.cpp)
 
-add_executable(ragnar_demo_motions src/ragnar_demo_motions.cpp)
+add_executable(ragnar_demo_motions src/ragnar_demo_motions.cpp
+                src/spline_creator.cpp)
 
+
+## add_executable(spline_creator src/spline_creator.cpp)
+target_link_libraries(spline_creator
+  ${catkin_LIBRARIES}
+  ${OpenCV_LIBRARIES}
+)
 
 target_link_libraries(ragnar_kinematics_node
   ragnar_kinematics
+  spline_creator
   ${catkin_LIBRARIES}
 )
 
 target_link_libraries(ragnar_demo_motions
   ragnar_kinematics
   ${catkin_LIBRARIES}
+  ${OpenCV_LIBRARIES}
 )
 
 #############

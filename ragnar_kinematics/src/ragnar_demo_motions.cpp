@@ -1,6 +1,11 @@
 #include <ros/ros.h>
 #include <ragnar_kinematics/ragnar_kinematics.h>
 #include <trajectory_msgs/JointTrajectory.h>
+#include <ragnar_kinematics/spline_creator.h>
+
+#include <opencv2/core/core.hpp>
+#include <opencv2/highgui/highgui.hpp>
+#include <opencv2/imgproc/imgproc.hpp>
 
 static void populateHeader(std_msgs::Header& header)
 {
@@ -283,6 +288,43 @@ static trajectory_msgs::JointTrajectory makePickPlaceTrajectory()
   return traj;
 }
 
+static trajectory_msgs::JointTrajectory convertToTrajectory(const std::vector<std::vector<cv::Point2f> >& in_traj, const float z)
+{
+  trajectory_msgs::JointTrajectory traj;
+  populateHeader(traj.header);
+
+  const double LINEAR_MOVE_TIME = 2.0;
+  const double VERTICAL_MOVE_TIME = 2.0;
+  const double WAIT_PERIOD = 0.5;
+
+  // Home position
+  RagnarPose home_pt (0.0, 0.0, -0.2);
+  TrajPointVec vec = singlePoint(home_pt, 5.0);
+
+  for(int j = 0; j < in_traj.size(); ++j)
+  {
+    // First point
+    ROS_INFO("trajectory size: %d", in_traj[j].size());
+    ROS_INFO("starting to make Ragnar trajectory with pt %.3f, %.3f", in_traj[j][0].x, in_traj[j][0].y);
+    RagnarPose last_pt (in_traj[j][0].x, in_traj[j][0].y, -0.4);
+    vec = append(vec, toTrajPoints(linearMove(home_pt, last_pt, 0.01), LINEAR_MOVE_TIME));
+
+    // remaining points in trajectory
+    for(int i = 1; i < in_traj[j].size(); ++i)
+    {
+      RagnarPose next_pt (in_traj[j][i].x, in_traj[j][i].y, -0.4);
+      vec = append(vec, toTrajPoints(linearMove(last_pt, next_pt, 0.01), 0.01));
+      last_pt = next_pt;
+    }
+
+    // UP
+    vec = append(vec, toTrajPoints(linearMove(last_pt, home_pt, 0.01), LINEAR_MOVE_TIME));
+  }
+
+  traj.points = vec;
+  return traj;
+}
+
 int main(int argc, char** argv)
 {
   ros::init(argc, argv, "ragnar_demo_motions");
@@ -290,10 +332,21 @@ int main(int argc, char** argv)
   ros::NodeHandle nh;
   ros::Publisher traj_pub = nh.advertise<trajectory_msgs::JointTrajectory>("joint_path_command", 1);
 
+  // Create a trajectory from an image
+  cv::Mat src = cv::imread("/home/alex/test_signature.png");
+  cv::Point2i origin;
+  float range_x = 0.75;
+  origin.x = src.cols/2.0;
+  origin.y = src.rows/2.0;
+  SplineCreator creator(origin, range_x);
+  std::vector<std::vector<cv::Point2f> > trajectories;
+  creator.createTrajectories(src, trajectories);
+
   // trajectory_msgs::JointTrajectory traj = makeLineTrajectory();
   // trajectory_msgs::JointTrajectory traj = makeCircleTrajectory(); 
-  trajectory_msgs::JointTrajectory traj = makePickPlaceTrajectory();
-  // 
+  // trajectory_msgs::JointTrajectory traj = makePickPlaceTrajectory();
+  trajectory_msgs::JointTrajectory traj = convertToTrajectory(trajectories, -0.4);
+
   std::vector<std::string> names;
   names.push_back("joint_1");
   names.push_back("joint_2");
