@@ -6,6 +6,9 @@ project(ragnar_kinematics)
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS
   roscpp
+  std_srvs
+  cv_bridge
+  sensor_msgs
 )
 
 find_package(OpenCV)
@@ -39,6 +42,8 @@ add_executable(ragnar_kinematics_node src/ragnar_test_demo.cpp)
 add_executable(ragnar_demo_motions src/ragnar_demo_motions.cpp
                 src/spline_creator.cpp)
 
+add_executable(ragnar_signature_demo src/ragnar_signature_demo.cpp
+                src/spline_creator.cpp)
 
 ## add_executable(spline_creator src/spline_creator.cpp)
 target_link_libraries(spline_creator
@@ -53,6 +58,12 @@ target_link_libraries(ragnar_kinematics_node
 )
 
 target_link_libraries(ragnar_demo_motions
+  ragnar_kinematics
+  ${catkin_LIBRARIES}
+  ${OpenCV_LIBRARIES}
+)
+
+target_link_libraries(ragnar_signature_demo
   ragnar_kinematics
   ${catkin_LIBRARIES}
   ${OpenCV_LIBRARIES}

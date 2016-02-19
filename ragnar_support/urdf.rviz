@@ -8,8 +8,9 @@ Panels:
         - /Status1
         - /TF1/Frames1
         - /RobotModel1/Links1
+        - /Image1
       Splitter Ratio: 0.5
-    Tree Height: 718
+    Tree Height: 304
   - Class: rviz/Selection
     Name: Selection
   - Class: rviz/Tool Properties
@@ -57,17 +58,25 @@ Visualization Manager:
         All Enabled: true
         base_link:
           Value: true
-        base_link2:
-          Value: true
         ee_link:
           Value: true
-        lower_arm_1:
+        lower_arm_1a:
           Value: true
-        lower_arm_2:
+        lower_arm_1b:
           Value: true
-        lower_arm_3:
+        lower_arm_2a:
           Value: true
-        lower_arm_4:
+        lower_arm_2b:
+          Value: true
+        lower_arm_3a:
+          Value: true
+        lower_arm_3b:
+          Value: true
+        lower_arm_4a:
+          Value: true
+        lower_arm_4b:
+          Value: true
+        tool0:
           Value: true
         upper_arm_1:
           Value: true
@@ -87,17 +96,24 @@ Visualization Manager:
       Tree:
         world:
           base_link:
-            base_link2:
-              {}
             ee_link:
+              tool0:
+                {}
+            lower_arm_1a:
               {}
-            lower_arm_1:
+            lower_arm_1b:
               {}
-            lower_arm_2:
+            lower_arm_2a:
               {}
-            lower_arm_3:
+            lower_arm_2b:
               {}
-            lower_arm_4:
+            lower_arm_3a:
+              {}
+            lower_arm_3b:
+              {}
+            lower_arm_4a:
+              {}
+            lower_arm_4b:
               {}
             upper_arm_1:
               {}
@@ -131,36 +147,56 @@ Visualization Manager:
           Alpha: 1
           Show Axes: false
           Show Trail: false
-        base_link2:
-          Alpha: 1
-          Show Axes: false
-          Show Trail: false
           Value: true
         ee_link:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        lower_arm_1:
+        lower_arm_1a:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        lower_arm_2:
+        lower_arm_1b:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        lower_arm_3:
+        lower_arm_2a:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
-        lower_arm_4:
+        lower_arm_2b:
           Alpha: 1
           Show Axes: false
           Show Trail: false
           Value: true
+        lower_arm_3a:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        lower_arm_3b:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        lower_arm_4a:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        lower_arm_4b:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
+          Value: true
+        tool0:
+          Alpha: 1
+          Show Axes: false
+          Show Trail: false
         upper_arm_1:
           Alpha: 1
           Show Axes: false
@@ -191,6 +227,17 @@ Visualization Manager:
       Update Interval: 0
       Value: true
       Visual Enabled: true
+    - Class: rviz/Image
+      Enabled: true
+      Image Topic: /signature_path
+      Max Value: 1
+      Median window: 5
+      Min Value: 0
+      Name: Image
+      Normalize Range: true
+      Queue Size: 2
+      Transport Hint: raw
+      Value: true
   Enabled: true
   Global Options:
     Background Color: 48; 48; 48
@@ -235,10 +282,12 @@ Visualization Manager:
 Window Geometry:
   Displays:
     collapsed: false
-  Height: 934
+  Height: 857
   Hide Left Dock: false
   Hide Right Dock: false
-  QMainWindow State: 000000ff00000000fd0000000400000000000001b900000360fc0200000008fb0000001200530065006c0065006300740069006f006e00000001e10000009b0000006400fffffffb0000001e0054006f006f006c002000500072006f007000650072007400690065007302000001ed000001df00000185000000a3fb000000120056006900650077007300200054006f006f02000001df000002110000018500000122fb000000200054006f006f006c002000500072006f0070006500720074006900650073003203000002880000011d000002210000017afc0000002800000360000000dd00fffffffa000000010100000002fb0000000800540069006d00650000000000ffffffff000002f600fffffffb000000100044006900730070006c00610079007301000000000000023a0000010f00fffffffb0000002000730065006c0065006300740069006f006e00200062007500660066006500720200000138000000aa0000023a00000294fb00000014005700690064006500530074006500720065006f02000000e6000000d2000003ee0000030bfb0000000c004b0069006e0065006300740200000186000001060000030c00000261000000010000010f00000437fc0200000003fb0000001e0054006f006f006c002000500072006f00700065007200740069006500730100000041000000780000000000000000fb0000000a00560069006500770073000000004300000437000000b000fffffffb0000001200530065006c0065006300740069006f006e010000025a000000b200000000000000000000000200000490000000a9fc0100000001fb0000000a00560069006500770073030000004e00000080000002e10000019700000003000006400000003efc0100000001fb0000000800540069006d00650100000000000004500000000000000000000004810000036000000004000000040000000800000008fc0000000100000002000000010000000a0054006f006f006c00730100000000ffffffff0000000000000000
+  Image:
+    collapsed: false
+  QMainWindow State: 000000ff00000000fd0000000400000000000001b900000313fc0200000009fb0000001200530065006c0065006300740069006f006e00000001e10000009b0000006400fffffffb0000001e0054006f006f006c002000500072006f007000650072007400690065007302000001ed000001df00000185000000a3fb000000120056006900650077007300200054006f006f02000001df000002110000018500000122fb000000200054006f006f006c002000500072006f0070006500720074006900650073003203000002880000011d000002210000017afc00000028000001c2000000dd00fffffffa000000010100000002fb0000000800540069006d00650000000000ffffffff000002f600fffffffb000000100044006900730070006c00610079007301000000000000023a0000010f00fffffffb0000002000730065006c0065006300740069006f006e00200062007500660066006500720200000138000000aa0000023a00000294fb00000014005700690064006500530074006500720065006f02000000e6000000d2000003ee0000030bfb0000000c004b0069006e0065006300740200000186000001060000030c00000261fb0000000a0049006d00610067006501000001f00000014b0000001600ffffff000000010000010f00000437fc0200000003fb0000001e0054006f006f006c002000500072006f00700065007200740069006500730100000041000000780000000000000000fb0000000a00560069006500770073000000004300000437000000b000fffffffb0000001200530065006c0065006300740069006f006e010000025a000000b200000000000000000000000200000490000000a9fc0100000001fb0000000a00560069006500770073030000004e00000080000002e10000019700000003000006400000003efc0100000001fb0000000800540069006d006501000000000000045000000000000000000000020c0000031300000004000000040000000800000008fc0000000100000002000000010000000a0054006f006f006c00730100000000ffffffff0000000000000000
   Selection:
     collapsed: false
   Time:
@@ -247,6 +296,6 @@ Window Geometry:
     collapsed: false
   Views:
     collapsed: false
-  Width: 1600
-  X: 300
-  Y: 14
+  Width: 971
+  X: 201
+  Y: 111

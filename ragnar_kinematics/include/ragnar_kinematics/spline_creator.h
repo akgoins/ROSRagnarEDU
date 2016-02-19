@@ -51,7 +51,9 @@ private:
 
   int getNextPoint(cv::Mat& im, cv::Point2i& point, cv::Vec3b color);
 
-  void linkLines(cv::Mat& im, cv::Point2i start, cv::Vec3b color, std::vector<cv::Point2i>& line);
+  void createLines(cv::Mat& im, cv::Point2i start, cv::Vec3b color, std::vector<cv::Point2i>& line);
+
+  void linkLines( std::vector<std::vector<cv::Point2i> >& lines);
 
   std::vector<std::vector<cv::Point2f> > convertLineToTrajectory(std::vector<std::vector<cv::Point2i> > lines);
 

@@ -1,3 +1,4 @@
+
 #include <ros/ros.h>
 #include <ragnar_kinematics/ragnar_kinematics.h>
 #include <trajectory_msgs/JointTrajectory.h>
@@ -6,6 +7,47 @@
 #include <opencv2/core/core.hpp>
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
+
+#include <std_srvs/Empty.h>
+#include <sensor_msgs/Image.h>
+#include <cv_bridge/cv_bridge.h>
+
+class RagnarSigner
+{
+
+public:
+    RagnarSigner(){}
+    ~RagnarSigner(){}
+
+    void init(ros::NodeHandle nh);
+
+    bool createSignature(std_srvs::Empty::Request& req, std_srvs::Empty::Response& resp);
+    bool executeSignature(std_srvs::Empty::Request& req, std_srvs::Empty::Response& resp);
+
+private:
+
+    std::vector<std::vector<cv::Point2f> > trajectories_;
+    cv::Mat signature_image_;
+
+    SplineCreator creator_;
+    ros::NodeHandle nh_;
+    ros::NodeHandle pnh_;
+    ros::Publisher traj_pub_;
+    ros::Publisher image_pub_;
+    ros::ServiceServer create_signature_;
+    ros::ServiceServer execute_signature_;
+};
+
+void RagnarSigner::init(ros::NodeHandle nh)
+{
+    nh_ = nh;
+    ros::NodeHandle pnh("~");
+    pnh_ = pnh;
+    traj_pub_ = nh_.advertise<trajectory_msgs::JointTrajectory>("joint_path_command", 1);
+    image_pub_ = nh_.advertise<sensor_msgs::Image>("signature_path", 1);
+    create_signature_ = pnh_.advertiseService("create_signature", &RagnarSigner::createSignature, this);
+    execute_signature_ = pnh_.advertiseService("execute_signature", &RagnarSigner::executeSignature, this);
+}
 
 static void populateHeader(std_msgs::Header& header)
 {
@@ -175,13 +217,13 @@ static trajectory_msgs::JointTrajectory makeLineTrajectory()
   {
     throw std::runtime_error("Linear movement planning failed");
   }
-  
+
   const double dt = 0.1;
   double total_t = dt;
 
   for (unsigned i = 0; i < points.size(); ++i)
   {
-    JointTrajectoryPoint pt;  
+    JointTrajectoryPoint pt;
     pt.positions.assign(points[i].joints, points[i].joints+4);
     pt.time_from_start = ros::Duration(total_t);
     total_t += dt;
@@ -206,159 +248,129 @@ TrajPointVec singlePoint(const RagnarPose& pose, double dt)
   return v;
 }
 
-static trajectory_msgs::JointTrajectory makePickPlaceTrajectory()
-{
-  trajectory_msgs::JointTrajectory traj;
-  populateHeader(traj.header);
-
-  const double LINEAR_MOVE_TIME = 2.0;
-  const double VERTICAL_MOVE_TIME = 2.0;
-  const double WAIT_PERIOD = 0.5;
-
-  // Home position
-  RagnarPose home_pt (0.0, 0.0, -0.2);
-  TrajPointVec vec = singlePoint(home_pt, 5.0);
-
-  // Pick spot 1
-  RagnarPose pick1 (0.15, -0.3, -0.25);
-  vec = append(vec, toTrajPoints(linearMove(home_pt, pick1, 0.01), LINEAR_MOVE_TIME));
-
-  // Down
-  RagnarPose pick1_down (0.15, -0.3, -0.4);
-  vec = append(vec, toTrajPoints(linearMove(pick1, pick1_down, 0.01), VERTICAL_MOVE_TIME));
-
-  // Wait & Up
-  vec = append(vec, singlePoint(pick1_down, WAIT_PERIOD));
-  vec = append(vec, toTrajPoints(linearMove(pick1_down, pick1, 0.01), VERTICAL_MOVE_TIME));
-  // back home
-  vec = append(vec, toTrajPoints(linearMove(pick1, home_pt, 0.01), LINEAR_MOVE_TIME));
-
-  /*// Place spot 1
-  RagnarPose place1 (-0.15, 0.3, -0.1);
-  vec = append(vec, toTrajPoints(linearMove(pick1, home_pt, 0.01), LINEAR_MOVE_TIME));
-  vec = append(vec, toTrajPoints(linearMove(home_pt, place1, 0.01), LINEAR_MOVE_TIME));
-
-  // Down
-  RagnarPose place1_down (-0.15, 0.35, -0.3);
-  vec = append(vec, toTrajPoints(linearMove(place1, place1_down, 0.01), VERTICAL_MOVE_TIME));
-
-  // Wait & Up
-  vec = append(vec, singlePoint(place1_down, WAIT_PERIOD));
-  vec = append(vec, toTrajPoints(linearMove(place1_down, place1, 0.01), VERTICAL_MOVE_TIME));
-  vec = append(vec, toTrajPoints(linearMove(place1, home_pt, 0.01), LINEAR_MOVE_TIME));
-  */
-  /*//
-  // CYCLE 2
-  //
-  // Pick spot 2
-  RagnarPose pick2 (-0.1, -0.4, -0.2);
-  vec = append(vec, toTrajPoints(linearMove(home_pt, pick2, 0.01), LINEAR_MOVE_TIME));
-
-  // Down
-  RagnarPose pick2_down (-0.1, -0.4, -0.50);
-  vec = append(vec, toTrajPoints(linearMove(pick2, pick2_down, 0.01), VERTICAL_MOVE_TIME*1.2));
-
-  // Wait & Up
-  vec = append(vec, singlePoint(pick2_down, WAIT_PERIOD));
-  vec = append(vec, toTrajPoints(linearMove(pick2_down, pick2, 0.01), VERTICAL_MOVE_TIME));
-
-  // Place spot 2
-  RagnarPose place2 (-0.1, 0.4, -0.2);
-  vec = append(vec, toTrajPoints(linearMove(pick2, home_pt, 0.01), LINEAR_MOVE_TIME));
-  vec = append(vec, toTrajPoints(linearMove(home_pt, place2, 0.01), LINEAR_MOVE_TIME));
-
-  // Down
-  RagnarPose place2_down (-0.1, 0.4, -0.4);
-  vec = append(vec, toTrajPoints(linearMove(place2, place2_down, 0.01), VERTICAL_MOVE_TIME));
-
-  // Wait & Up
-  vec = append(vec, singlePoint(place2_down, WAIT_PERIOD));
-  vec = append(vec, toTrajPoints(linearMove(place2_down, place2, 0.01), VERTICAL_MOVE_TIME));
-  vec = append(vec, toTrajPoints(linearMove(place2, home_pt, 0.01), LINEAR_MOVE_TIME));
-
-  // Forward and back
-  RagnarPose forward1 (0.4, 0, -0.4);
-  RagnarPose backward1 (-0.4, 0, -0.4);
-  vec = append(vec, toTrajPoints(linearMove(home_pt, forward1, 0.01), LINEAR_MOVE_TIME));
-  vec = append(vec, toTrajPoints(linearMove(forward1, backward1, 0.01), LINEAR_MOVE_TIME));
-  vec = append(vec, toTrajPoints(linearMove(backward1, forward1, 0.01), LINEAR_MOVE_TIME));
-  vec = append(vec, toTrajPoints(linearMove(forward1, home_pt, 0.01), LINEAR_MOVE_TIME));
-*/
-  traj.points = vec;
-  return traj;
-}
 
 static trajectory_msgs::JointTrajectory convertToTrajectory(const std::vector<std::vector<cv::Point2f> >& in_traj, const float z, const u_int stride=1)
 {
   trajectory_msgs::JointTrajectory traj;
   populateHeader(traj.header);
 
-  const double LINEAR_MOVE_TIME = 2.0;
-  const double VERTICAL_MOVE_TIME = 2.0;
+  const double LINEAR_MOVE_TIME = 1.0;
+  const double VERTICAL_MOVE_TIME = 1.0;
   const double WAIT_PERIOD = 0.5;
 
+  double velocity = 5.0;
   // Home position
   RagnarPose home_pt (0.0, 0.0, -0.2);
   TrajPointVec vec = singlePoint(home_pt, 5.0);
 
+  RagnarPose first_pt = home_pt;
   for(int j = 0; j < in_traj.size(); ++j)
   {
     // First point
     ROS_INFO("trajectory size: %d", in_traj[j].size());
     ROS_INFO("starting to make Ragnar trajectory with pt %.3f, %.3f", in_traj[j][0].x, in_traj[j][0].y);
-    RagnarPose last_pt (in_traj[j][0].x, in_traj[j][0].y, -0.4);
-    vec = append(vec, toTrajPoints(linearMove(home_pt, last_pt, 0.01), LINEAR_MOVE_TIME));
+    RagnarPose last_pt (in_traj[j][0].x, in_traj[j][0].y, z + 0.075);
+    vec = append(vec, toTrajPoints(linearMove(first_pt, last_pt, 0.01), LINEAR_MOVE_TIME ));
 
     // remaining points in trajectory
-    double velocity = 15.0;
+    first_pt = last_pt;
+    last_pt.pose[2] = z;
+    vec = append(vec, toTrajPoints(linearMove(first_pt, last_pt, 0.01), velocity*0.075));
+
+    ROS_INFO_STREAM( "traj " << j << " size " << in_traj[j].size() );
+
     for(int i = 1; i < in_traj[j].size(); i=i+stride)
     {
-      RagnarPose next_pt (in_traj[j][i].x, in_traj[j][i].y, -0.4);
+
+      RagnarPose next_pt (in_traj[j][i].x, in_traj[j][i].y, z);
       double dist = sqrt(pow((last_pt.pose[0] - next_pt.pose[0]),2.0) + pow((last_pt.pose[1] - next_pt.pose[1]),2.0));
       vec = append(vec, toTrajPoints(linearMove(last_pt, next_pt, 0.01), velocity*dist));
       last_pt = next_pt;
     }
 
     // UP
-    vec = append(vec, toTrajPoints(linearMove(last_pt, home_pt, 0.01), LINEAR_MOVE_TIME));
+    first_pt = last_pt;
+    first_pt.pose[2] += 0.075;
+    vec = append(vec, toTrajPoints(linearMove(last_pt, first_pt, 0.01), velocity*0.075));
   }
+
+  // HOME
+  vec = append(vec, toTrajPoints(linearMove(first_pt, home_pt, 0.01), LINEAR_MOVE_TIME));
 
   traj.points = vec;
   return traj;
+}
+
+bool RagnarSigner::createSignature(std_srvs::Empty::Request& req, std_srvs::Empty::Response& resp)
+{
+  sensor_msgs::ImageConstPtr recent_image = ros::topic::waitForMessage<sensor_msgs::Image>("/usb_camera/image_raw");
+  cv_bridge::CvImagePtr bridge = cv_bridge::toCvCopy(recent_image, sensor_msgs::image_encodings::BGR8);
+
+  //cv_bridge bridge;
+  //bridge = cv_bridge::toCvCopy(recent_image, "mono8");
+
+  cv::Mat src = bridge->image;
+
+  float range_x = -0.45;
+  cv::Point2i origin;
+  origin.x = src.cols/2.0;
+  origin.y = src.rows/2.0;
+  SplineCreator creator(origin, range_x);
+  ROS_INFO_STREAM("image size: " << src.rows << " " << src.cols);
+  ROS_INFO_STREAM("image origin: " << origin.x << " " << origin.y);
+  //std::vector<std::vector<cv::Point2f> > trajectories;
+  creator.createTrajectories(src, trajectories_);
+
+  bridge->image = src;
+  sensor_msgs::ImagePtr pub = bridge->toImageMsg();
+  pub->header.stamp = ros::Time::now();
+  image_pub_.publish(pub);
+
+  return true;
+}
+
+bool RagnarSigner::executeSignature(std_srvs::Empty::Request& req, std_srvs::Empty::Response& resp)
+{
+  ROS_INFO("execute signature callback");
+
+    if(trajectories_.size() > 0)
+    {
+      // trajectory_msgs::JointTrajectory traj = makeLineTrajectory();
+      // trajectory_msgs::JointTrajectory traj = makeCircleTrajectory();
+      // trajectory_msgs::JointTrajectory traj = makePickPlaceTrajectory();
+      trajectory_msgs::JointTrajectory traj = convertToTrajectory(trajectories_, -0.415, 8 );
+
+      std::vector<std::string> names;
+      names.push_back("joint_1");
+      names.push_back("joint_2");
+      names.push_back("joint_3");
+      names.push_back("joint_4");
+
+      traj.joint_names = names;
+      ros::Duration(0.5).sleep();
+
+      traj_pub_.publish(traj);
+    }
+    return true;
 }
 
 int main(int argc, char** argv)
 {
   ros::init(argc, argv, "ragnar_demo_motions");
 
+  RagnarSigner my_signer;
+
   ros::NodeHandle nh;
-  ros::Publisher traj_pub = nh.advertise<trajectory_msgs::JointTrajectory>("joint_path_command", 1);
+
+  my_signer.init(nh);
+
+  //ros::Publisher traj_pub = nh.advertise<trajectory_msgs::JointTrajectory>("joint_path_command", 1);
+  //ros::ServiceServer server = nh.advertiseService("get_image", getImageSevice);
 
   // Create a trajectory from an image
   cv::Mat src = cv::imread("/home/ros/test_signature.png");
   cv::Point2i origin;
-  float range_x = 0.75;
-  origin.x = src.cols/2.0;
-  origin.y = src.rows/2.0;
-  SplineCreator creator(origin, range_x);
-  std::vector<std::vector<cv::Point2f> > trajectories;
-  creator.createTrajectories(src, trajectories);
 
-  // trajectory_msgs::JointTrajectory traj = makeLineTrajectory();
-  // trajectory_msgs::JointTrajectory traj = makeCircleTrajectory(); 
-  // trajectory_msgs::JointTrajectory traj = makePickPlaceTrajectory();
-  trajectory_msgs::JointTrajectory traj = convertToTrajectory(trajectories, -0.4, 8 );
-
-  std::vector<std::string> names;
-  names.push_back("joint_1");
-  names.push_back("joint_2");
-  names.push_back("joint_3");
-  names.push_back("joint_4"); 
-
-  traj.joint_names = names;
-  ros::Duration(0.5).sleep();
-
-  traj_pub.publish(traj);
 
   ros::spin();
 }

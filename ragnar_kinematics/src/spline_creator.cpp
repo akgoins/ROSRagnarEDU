@@ -24,6 +24,7 @@
 
 void SplineCreator::createTrajectories(cv::Mat &image, std::vector<std::vector<cv::Point2f> > &trajectories)
 {
+  trajectories.clear();
   if(range_x_ == 0)
   {
     ROS_ERROR("range_x parameter set to zero or not set, please set to a positive, non-zero value");
@@ -36,13 +37,18 @@ void SplineCreator::createTrajectories(cv::Mat &image, std::vector<std::vector<c
 
   cv::Mat bw, clr;
   cv::cvtColor(image, bw, CV_BGR2GRAY);
+  cv::threshold(bw, bw, 100, 255, cv::THRESH_BINARY_INV);
+
+  //cv::imshow("binary inverse thresholded image", bw);
+  //cv::waitKey();
+
   thinningGuoHall(bw);
 
   cv::cvtColor(bw, clr, CV_GRAY2BGR);
 
   ROS_INFO("start of converting image");
   convertImage(clr, trajectories);
-
+  image = clr;
   //cv::imshow("src", image);
   //cv::imshow("dst", bw);
   //cv::imshow("color", clr);
@@ -202,7 +208,7 @@ int SplineCreator::getNextPoint(cv::Mat& im, cv::Point2i& point, cv::Vec3b color
   return count;
 }
 
- void SplineCreator::linkLines(cv::Mat& im, cv::Point2i start, cv::Vec3b color, std::vector<cv::Point2i>& line)
+ void SplineCreator::createLines(cv::Mat& im, cv::Point2i start, cv::Vec3b color, std::vector<cv::Point2i>& line)
 {
   int i = start.x;
   int j = start.y;
@@ -242,6 +248,17 @@ int SplineCreator::getNextPoint(cv::Mat& im, cv::Point2i& point, cv::Vec3b color
     ++error;
   }
 
+  if(line.size() < 20)
+  {
+      line.clear();
+  }
+
+}
+
+void SplineCreator::linkLines( std::vector<std::vector<cv::Point2i> >& lines)
+{
+  // Check the end point of each line, if the slope of a line matches the slope of the endpoint of
+  // another line, connect the two line ends together
 
 }
 
@@ -278,8 +295,11 @@ void SplineCreator::convertImage(cv::Mat& inImage, std::vector<std::vector<cv::P
             ROS_INFO_STREAM("linking line number: " << count << " with color " << colors[c]);
             cv::Point2i pt(i, j);
             std::vector<cv::Point2i> line;
-            linkLines(inImage, pt, colors[c], line);
-            lines.push_back(line);
+            createLines(inImage, pt, colors[c], line);
+            if(line.size() > 10)
+            {
+              lines.push_back(line);
+            }
             ++c;
             ++count;
             if(c > 8) c = 0;
@@ -288,13 +308,14 @@ void SplineCreator::convertImage(cv::Mat& inImage, std::vector<std::vector<cv::P
   }
 
   trajectories = convertLineToTrajectory(lines);
+  ROS_INFO("returning %u lines", lines.size());
 }
 
 std::vector<std::vector<cv::Point2f> > SplineCreator::convertLineToTrajectory(std::vector<std::vector<cv::Point2i> > lines)
 {
   double scale_y;
   double scale_x = range_x_ / image_size_.width; // x-axis range, units in m/pixel
-  if(range_y_ > 0)  // if y-axis range is given, use it; else, use x-axis scale for uniform scaling
+  if(range_y_ > 0.01)  // if y-axis range is given, use it; else, use x-axis scale for uniform scaling
   {
     scale_y = range_y_ / image_size_.height;
   }
@@ -303,6 +324,7 @@ std::vector<std::vector<cv::Point2f> > SplineCreator::convertLineToTrajectory(st
     scale_y = scale_x;
   }
 
+  ROS_WARN("scale x/y: %.5f, %.5f", scale_x, scale_y);
   std::vector<std::vector<cv::Point2f> > trajectories;
 
   for(int i = 0; i < lines.size(); ++i)
@@ -312,12 +334,15 @@ std::vector<std::vector<cv::Point2f> > SplineCreator::convertLineToTrajectory(st
     for(int j = 0; j < lines[i].size(); ++j)
     {
       cv::Point2f pt;
-      pt.x = (float(lines[i][j].x) - float(origin_.x)) * scale_x; // convert the point to the correct origin, then scale to meters
-      pt.y = (float(lines[i][j].y) - float(origin_.y)) * scale_y;
+      pt.x = (float(lines[i][j].x) - float(origin_.y)) * scale_x; // convert the point to the correct origin, then scale to meters
+      pt.y = (float(lines[i][j].y) - float(origin_.x)) * scale_y;
       traj.push_back(pt);
     }
     ROS_INFO("converted traj of size: %u", traj.size());
-    trajectories.push_back(traj);
+    if(traj.size() > 10)
+    {
+      trajectories.push_back(traj);
+    }
   }
 
   return trajectories;
