@@ -42,6 +42,8 @@ private:
   cv::Size2i image_size_;
   float range_x_;
   float range_y_;
+  float link_distance_;
+  float link_slope_tolerance_;
 
   // Taken from http://opencv-code.com/quick-tips/implementation-of-guo-hall-thinning-algorithm/
   void thinningGuoHallIteration(cv::Mat& im, int iter);
@@ -54,6 +56,9 @@ private:
   void createLines(cv::Mat& im, cv::Point2i start, cv::Vec3b color, std::vector<cv::Point2i>& line);
 
   void linkLines( std::vector<std::vector<cv::Point2i> >& lines);
+
+  bool isNear(std::vector<cv::Point2i>  line1, std::vector<cv::Point2i> line2, std::vector<cv::Point2i>& out_line2 );
+  bool isNear(cv::Point2i pt1_a, cv::Point2i pt1_b, cv::Point2i pt2_a, cv::Point2i pt2_b);
 
   std::vector<std::vector<cv::Point2f> > convertLineToTrajectory(std::vector<std::vector<cv::Point2i> > lines);
 

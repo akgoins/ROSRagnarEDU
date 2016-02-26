@@ -1,0 +1,9 @@
+<?xml version="1.0" ?>
+<launch>
+
+  <!--node name="usb_camera" pkg="usb_cam" type="usb_cam_node"/-->
+  <node name="ragnar_demo_node" pkg="ragnar_kinematics" type="ragnar_signature_demo"
+  output="screen"/>
+
+  <!-- launch-prefix="xterm -e gdb -args -->
+</launch>

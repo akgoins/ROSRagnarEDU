@@ -24,6 +24,8 @@
 
 void SplineCreator::createTrajectories(cv::Mat &image, std::vector<std::vector<cv::Point2f> > &trajectories)
 {
+  link_distance_ = 15;
+  link_slope_tolerance_ = 0.7;
   trajectories.clear();
   if(range_x_ == 0)
   {
@@ -148,6 +150,7 @@ int SplineCreator::getNextPoint(cv::Mat& im, cv::Point2i& point, cv::Vec3b color
         lastPt.y = point.y + jj;
         lasti = ii;
         lastj = jj;
+        ++count;
       }
     }
   }
@@ -155,6 +158,7 @@ int SplineCreator::getNextPoint(cv::Mat& im, cv::Point2i& point, cv::Vec3b color
 
   // Initial attempt to make lines track in the same direction in the event that two lines cross
   // Return the white pixel that is on the opposite side as the previously colored pixel
+  /*
   if(count > 1 && lasti != 0 && lastj != 0)
   {
     //ROS_INFO("count is greater than 1, last i,j: %d, %d", lasti, lastj);
@@ -201,7 +205,7 @@ int SplineCreator::getNextPoint(cv::Mat& im, cv::Point2i& point, cv::Vec3b color
       }
     }
 
-  }
+  }*/
 
   // Return the next continuguous point in the line to color
   point = pt;
@@ -210,13 +214,11 @@ int SplineCreator::getNextPoint(cv::Mat& im, cv::Point2i& point, cv::Vec3b color
 
  void SplineCreator::createLines(cv::Mat& im, cv::Point2i start, cv::Vec3b color, std::vector<cv::Point2i>& line)
 {
-  int i = start.x;
-  int j = start.y;
 
   cv::Point2i pt = start;
   int count = getNextPoint(im, pt, color);
 
-  if(count > 2)
+  if(count > 1)
   {
     return;
   }
@@ -224,12 +226,12 @@ int SplineCreator::getNextPoint(cv::Mat& im, cv::Point2i& point, cv::Vec3b color
   im.at<cv::Vec3b>(start.x, start.y) = color;
 
   int error = 0;
-  while((count < 2 || count > 0) && error < 2000)
+  while((count < 3 && count > 0) && error < 2000)
   {
     cv::Point2i PtIn = pt;
     im.at<cv::Vec3b>(pt.x, pt.y) = color;
     count = getNextPoint(im, pt, color);
-    if(pt == PtIn) break;
+    if(PtIn == pt) break;
     line.push_back(pt);
     ++error;
   }
@@ -238,28 +240,135 @@ int SplineCreator::getNextPoint(cv::Mat& im, cv::Point2i& point, cv::Vec3b color
   // Repeat to make sure we get all of line segment;
   pt = start;
   error = 0;
-  while((count < 2 || count > 0) && error < 2000)
+  while((count < 3 && count > 0) && error < 2000)
   {
     cv::Point2i PtIn = pt;
     im.at<cv::Vec3b>(pt.x, pt.y) = color;
     count = getNextPoint(im, pt, color);
-    if(pt == PtIn) break;
+    if(PtIn == pt) break;
     line.insert(line.begin(), pt);
     ++error;
   }
 
-  if(line.size() < 20)
+  if(line.size() < 10)
   {
+    ROS_WARN("line of size less than 10, deleting line");
       line.clear();
   }
 
 }
 
+
+
+bool SplineCreator::isNear(cv::Point2i pt1_a, cv::Point2i pt1_b, cv::Point2i pt2_a, cv::Point2i pt2_b)
+{
+  double dist = sqrt(pow(double(pt1_a.x) - double(pt2_a.x), 2.0) + pow(double(pt1_a.y) - double(pt2_a.y), 2.0));
+  double slope1 = atan((double(pt1_a.y) - double(pt1_b.y))/(double(pt1_a.x) - double(pt1_b.x)));
+  double slope2 = atan((double(pt2_a.y) - double(pt2_b.y))/(double(pt2_a.x) - double(pt2_b.x)));
+
+  ROS_INFO("pt1 %d, %d; pt2 %d, %d", pt1_a.x, pt1_a.y, pt2_a.x, pt2_a.y);
+  //ROS_INFO("pt1b %d, %d; pt2b %d, %d", pt1_b.x, pt1_b.y, pt2_b.x, pt2_b.y);
+  ROS_INFO("pt distance: %.3f, slope1 %.3f, slope 2 %.3f", dist, slope1, slope2);
+  return (dist <= link_distance_ && fabs(slope1 - slope2) <= link_slope_tolerance_);
+}
+
+bool SplineCreator::isNear(std::vector<cv::Point2i>  line1, std::vector<cv::Point2i> line2, std::vector<cv::Point2i>& out_line )
+{
+  int incr = 8;
+  if(line1.size() < incr +1 || line2.size() < incr +1)
+  {
+    return false;
+  }
+
+  // Might be able to use iterators here to make the code easier
+
+  // back of first line, front of second line
+  if(isNear(line1.back(), line1[line1.size() - incr], line2[0], line2[incr]))
+  {
+    out_line = line1;
+    out_line.insert(out_line.end(), line2.begin(), line2.end());
+    return true;
+  }
+
+  // front of both lines
+  if(isNear(line1[0], line1[incr], line2[0], line2[incr]))
+  {
+    std::vector<cv::Point2i> temp_line = line1;
+    std::reverse(temp_line.begin(), temp_line.end());
+    out_line = temp_line;
+    out_line.insert(out_line.end(), line2.begin(), line2.end());
+    return true;
+  }
+
+  // back of second line, front of first line
+  if(isNear(line1[0], line1[incr], line2.back(), line2[line2.size() - incr]))
+  {
+    out_line = line2;
+    out_line.insert(out_line.end(), line1.begin(), line1.end());
+    return true;
+  }
+
+  // back of both lines
+  if(isNear(line1.back(), line1[line1.size() - incr], line2.back(), line2[line2.size() - incr]))
+  {
+    std::vector<cv::Point2i> temp_line = line2;
+    std::reverse(temp_line.begin(), temp_line.end());
+    out_line = line1;
+    out_line.insert(out_line.end(), temp_line.begin(), temp_line.end());
+    return true;
+  }
+
+  return false;
+
+}
+
 void SplineCreator::linkLines( std::vector<std::vector<cv::Point2i> >& lines)
 {
+  ROS_INFO("number of lines in: %d", lines.size());
+  std::vector<std::vector<cv::Point2i> > linked_lines = lines;
   // Check the end point of each line, if the slope of a line matches the slope of the endpoint of
   // another line, connect the two line ends together
 
+  for(int i = 0; i < lines.size(); ++i)
+  {
+
+    // for all other lines, try to find a nearest line between line i and line j
+    for(int j = i+1; j < lines.size(); ++j )
+    {
+      std::vector<cv::Point2i> temp_line;
+      if(isNear(lines[i], lines[j], temp_line))
+      {
+        ROS_WARN("linked line found for lines %d and %d", i, j);
+        // list of new lines consists of the new linked line, plus all of the remaining lines (without lines i and j)
+        linked_lines.clear();
+        linked_lines.push_back(temp_line);
+        for(int k = 0; k < lines.size(); ++k) // add remaining lines
+        {
+          if(k == i || k == j)
+          {
+            continue;
+          }
+          linked_lines.push_back(lines[k]);
+          ROS_INFO("adding line %d", k);
+        }
+
+        lines = linked_lines; // update lines list
+        i = 0;  // reset i so that linking begins at the start again
+        break;
+
+      }
+
+
+
+    }
+
+  }
+
+
+
+  //lines = linked_lines;
+
+  ROS_INFO("number of lines in: %d", lines.size());
 }
 
 
@@ -292,7 +401,7 @@ void SplineCreator::convertImage(cv::Mat& inImage, std::vector<std::vector<cv::P
 
           if(p2.val[0] >= 200 && p2.val[1] >= 200 && p2.val[2] >= 200)
           {
-            ROS_INFO_STREAM("linking line number: " << count << " with color " << colors[c]);
+            //ROS_INFO_STREAM("linking line number: " << count << " with color " << colors[c]);
             cv::Point2i pt(i, j);
             std::vector<cv::Point2i> line;
             createLines(inImage, pt, colors[c], line);
@@ -306,6 +415,23 @@ void SplineCreator::convertImage(cv::Mat& inImage, std::vector<std::vector<cv::P
           }
       }
   }
+
+  /*
+  linkLines(lines);
+
+  // /*
+  inImage.setTo(cv::Scalar(0));
+
+  c=0;
+  for(int i = 0; i < lines.size(); ++i)
+  {
+    for(int j = 0; j < lines[i].size(); ++j)
+    {
+      inImage.at<cv::Vec3b>(lines[i][j].x, lines[i][j].y) = colors[c];
+    }
+    ++c;
+    if(c > 8) c = 0;
+  }//*/
 
   trajectories = convertLineToTrajectory(lines);
   ROS_INFO("returning %u lines", lines.size());
