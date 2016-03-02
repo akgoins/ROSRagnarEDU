@@ -55,10 +55,10 @@ private:
 
   void createLines(cv::Mat& im, cv::Point2i start, cv::Vec3b color, std::vector<cv::Point2i>& line);
 
-  void linkLines( std::vector<std::vector<cv::Point2i> >& lines);
+  void linkLines( std::vector<std::vector<cv::Point2i> >& lines, bool use_slope = true);
 
-  bool isNear(std::vector<cv::Point2i>  line1, std::vector<cv::Point2i> line2, std::vector<cv::Point2i>& out_line2 );
-  bool isNear(cv::Point2i pt1_a, cv::Point2i pt1_b, cv::Point2i pt2_a, cv::Point2i pt2_b);
+  bool isNear(std::vector<cv::Point2i>  line1, std::vector<cv::Point2i> line2, std::vector<cv::Point2i>& out_line2, bool use_slope = true );
+  bool isNear(cv::Point2i pt1_a, cv::Point2i pt1_b, cv::Point2i pt2_a, cv::Point2i pt2_b, bool use_slope = true);
 
   std::vector<std::vector<cv::Point2f> > convertLineToTrajectory(std::vector<std::vector<cv::Point2i> > lines);
 
